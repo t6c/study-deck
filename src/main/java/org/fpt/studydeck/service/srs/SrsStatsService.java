@@ -38,7 +38,9 @@ public class SrsStatsService {
         long totalCards = flashcardRepository.countByDeckId(deckId);
         long cardStateCount = srsCardStateRepository.countByFlashcardDeckId(deckId);
         long newCards = totalCards - cardStateCount;
-        long learningCards = srsCardStateRepository.countByFlashcardDeckIdAndState(deckId, SrsState.LEARNING);
+        // RELEARNING is an active learning queue after a lapse, not a mature review queue.
+        long learningCards = srsCardStateRepository.countByFlashcardDeckIdAndState(deckId, SrsState.LEARNING)
+            + srsCardStateRepository.countByFlashcardDeckIdAndState(deckId, SrsState.RELEARNING);
         long reviewCards = srsCardStateRepository.countByFlashcardDeckIdAndState(deckId, SrsState.REVIEW);
         long dueCards = newCards + srsCardStateRepository.countDueByDeckId(deckId, Instant.now());
 

@@ -1,6 +1,7 @@
 package org.fpt.studydeck.service.srs;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.Instant;
 
@@ -8,6 +9,7 @@ import org.fpt.studydeck.domain.srs.SrsCardState;
 import org.fpt.studydeck.domain.srs.SrsRating;
 import org.fpt.studydeck.domain.srs.SrsState;
 import org.fpt.studydeck.dto.srs.SrsReviewRequest;
+import org.fpt.studydeck.exception.InvalidRequestException;
 import org.fpt.studydeck.repository.srs.SrsCardStateRepository;
 import org.fpt.studydeck.repository.srs.SrsReviewLogRepository;
 import org.fpt.studydeck.service.deck.DeckService;
@@ -91,6 +93,19 @@ class SrsReviewServiceTest {
         assertThat(state.state()).isEqualTo(SrsState.NEW);
         assertThat(state.reps()).isZero();
         assertThat(state.lapses()).isZero();
+    }
+
+    @Test
+    void rejectsNegativeReviewDuration() {
+        var deck = deckService.createDeck(null, "Korean Basics", null);
+        var flashcard = flashcardService.createFlashcard(deck.getId(), "현장", "site", null, null);
+
+        assertThatThrownBy(() -> srsReviewService.review(
+                flashcard.getId(),
+                new SrsReviewRequest(SrsRating.GOOD, -1)
+            ))
+            .isInstanceOf(InvalidRequestException.class)
+            .hasMessage("Duration must be zero or positive.");
     }
 
     private static SrsCardState reviewedState(org.fpt.studydeck.domain.deck.Flashcard flashcard, Instant dueAt) {

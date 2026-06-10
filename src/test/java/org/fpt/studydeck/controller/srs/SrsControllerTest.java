@@ -58,6 +58,19 @@ class SrsControllerTest {
     }
 
     @Test
+    void rejectsNegativeReviewDuration() throws Exception {
+        var deck = deckService.createDeck(null, "Korean Basics", null);
+        var flashcard = flashcardService.createFlashcard(deck.getId(), "현장", "site", null, null);
+
+        mockMvc.perform(post("/api/v1/flashcards/{flashcardId}/srs/reviews", flashcard.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"rating\":\"GOOD\",\"durationMs\":-1}"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.fieldErrors[0].field").value("durationMs"))
+            .andExpect(jsonPath("$.fieldErrors[0].message").value("Duration must be zero or positive."));
+    }
+
+    @Test
     void getStatsReturnsSrsCounts() throws Exception {
         var deck = deckService.createDeck(null, "Korean Basics", null);
         var reviewed = flashcardService.createFlashcard(deck.getId(), "현장", "site", null, null);

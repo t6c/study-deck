@@ -14,6 +14,7 @@ import org.fpt.studydeck.dto.srs.SrsCardStateResponse;
 import org.fpt.studydeck.dto.srs.SrsDueCardResponse;
 import org.fpt.studydeck.dto.srs.SrsReviewRequest;
 import org.fpt.studydeck.dto.srs.SrsReviewResponse;
+import org.fpt.studydeck.exception.InvalidRequestException;
 import org.fpt.studydeck.exception.ResourceNotFoundException;
 import org.fpt.studydeck.repository.deck.DeckRepository;
 import org.fpt.studydeck.repository.deck.FlashcardRepository;
@@ -50,6 +51,10 @@ public class SrsReviewService {
     }
 
     public SrsReviewResponse review(Long flashcardId, SrsReviewRequest request) {
+        if (request.durationMs() < 0) {
+            throw new InvalidRequestException("Duration must be zero or positive.");
+        }
+
         Flashcard flashcard = flashcardRepository.findById(flashcardId)
             .orElseThrow(() -> new ResourceNotFoundException(FLASHCARD_NOT_FOUND));
         SrsCardState cardState = srsCardStateRepository.findByFlashcardId(flashcardId)
