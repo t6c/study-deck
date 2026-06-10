@@ -12,7 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@WebMvcTest
+@WebMvcTest(controllers = SecurityConfigTest.PingController.class)
 @Import({SecurityConfig.class, SecurityConfigTest.PingController.class})
 class SecurityConfigTest {
 
