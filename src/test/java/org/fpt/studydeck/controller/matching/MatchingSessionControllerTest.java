@@ -1,6 +1,7 @@
 package org.fpt.studydeck.controller.matching;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -54,6 +55,20 @@ class MatchingSessionControllerTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.matchedCount").value(1))
             .andExpect(jsonPath("$.items[0].matched").value(true));
+    }
+
+    @Test
+    void getReturnsSession() throws Exception {
+        var deck = deckService.createDeck(null, "Korean Basics", null);
+        createCards(deck.getId(), 2);
+        var created = createSession(deck.getId(), 2);
+        var sessionId = com.jayway.jsonpath.JsonPath.read(created, "$.id");
+
+        mockMvc.perform(get("/api/v1/matching-sessions/{sessionId}", sessionId))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id").value(sessionId))
+            .andExpect(jsonPath("$.status").value("ACTIVE"))
+            .andExpect(jsonPath("$.items.length()").value(2));
     }
 
     @Test

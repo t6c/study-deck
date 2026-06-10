@@ -8,6 +8,7 @@ import org.fpt.studydeck.dto.matching.CreateMatchingSessionRequest;
 import org.fpt.studydeck.dto.matching.MatchingAnswerRequest;
 import org.fpt.studydeck.exception.InvalidRequestException;
 import org.fpt.studydeck.exception.ResourceConflictException;
+import org.fpt.studydeck.exception.ResourceNotFoundException;
 import org.fpt.studydeck.repository.matching.MatchingSessionRepository;
 import org.fpt.studydeck.service.deck.DeckService;
 import org.fpt.studydeck.service.deck.FlashcardService;
@@ -114,6 +115,39 @@ class MatchingSessionServiceTest {
             ))
             .isInstanceOf(ResourceConflictException.class)
             .hasMessage("Matching session is already completed.");
+    }
+
+    @Test
+    void getSessionMissingThrowsResourceNotFoundException() {
+        assertThatThrownBy(() -> matchingSessionService.getSession(999L))
+            .isInstanceOf(ResourceNotFoundException.class)
+            .hasMessage("Matching session was not found.");
+    }
+
+    @Test
+    void matchMissingItemThrowsResourceNotFoundException() {
+        var deck = deckService.createDeck(null, "Korean Basics", null);
+        createCards(deck.getId(), 1);
+        var session = matchingSessionService.createSession(deck.getId(), new CreateMatchingSessionRequest(1, false));
+
+        assertThatThrownBy(() -> matchingSessionService.match(session.id(), new MatchingAnswerRequest(999L)))
+            .isInstanceOf(ResourceNotFoundException.class)
+            .hasMessage("Matching session item was not found.");
+    }
+
+    @Test
+    void matchItemFromAnotherSessionThrowsResourceNotFoundException() {
+        var deck = deckService.createDeck(null, "Korean Basics", null);
+        createCards(deck.getId(), 2);
+        var firstSession = matchingSessionService.createSession(deck.getId(), new CreateMatchingSessionRequest(1, false));
+        var secondSession = matchingSessionService.createSession(deck.getId(), new CreateMatchingSessionRequest(1, false));
+
+        assertThatThrownBy(() -> matchingSessionService.match(
+                firstSession.id(),
+                new MatchingAnswerRequest(secondSession.items().get(0).id())
+            ))
+            .isInstanceOf(ResourceNotFoundException.class)
+            .hasMessage("Matching session item was not found.");
     }
 
     private void createCards(Long deckId, int count) {
