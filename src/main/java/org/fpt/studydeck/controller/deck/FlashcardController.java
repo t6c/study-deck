@@ -74,7 +74,7 @@ public class FlashcardController {
     @PatchMapping("/flashcards/{flashcardId}/star")
     public FlashcardResponse setStarred(
         @PathVariable Long flashcardId,
-        @RequestBody StarFlashcardRequest request
+        @Valid @RequestBody StarFlashcardRequest request
     ) {
         return FlashcardResponse.from(flashcardService.setStarred(flashcardId, request.starred()));
     }

@@ -37,4 +37,17 @@ class FlashcardControllerTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.starred").value(true));
     }
+
+    @Test
+    void rejectsMissingStarredFlag() throws Exception {
+        var deck = deckService.createDeck(null, "Korean Basics", null);
+        var flashcard = flashcardService.createFlashcard(deck.getId(), "현장", "site", null, null);
+
+        mockMvc.perform(patch("/api/v1/flashcards/{flashcardId}/star", flashcard.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{}"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.fieldErrors[0].field").value("starred"))
+            .andExpect(jsonPath("$.fieldErrors[0].message").value("Starred flag is required."));
+    }
 }

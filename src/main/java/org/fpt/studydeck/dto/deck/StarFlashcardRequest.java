@@ -1,4 +1,9 @@
 package org.fpt.studydeck.dto.deck;
 
-public record StarFlashcardRequest(boolean starred) {
+import jakarta.validation.constraints.NotNull;
+
+public record StarFlashcardRequest(
+    @NotNull(message = "Starred flag is required.")
+    Boolean starred
+) {
 }
