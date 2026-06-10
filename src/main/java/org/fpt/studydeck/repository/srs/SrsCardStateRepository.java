@@ -14,6 +14,10 @@ public interface SrsCardStateRepository extends JpaRepository<SrsCardState, Long
 
     Optional<SrsCardState> findByFlashcardId(Long flashcardId);
 
+    void deleteByFlashcardId(Long flashcardId);
+
+    void deleteByFlashcardDeckId(Long deckId);
+
     long countByFlashcardDeckId(Long deckId);
 
     long countByFlashcardDeckIdAndState(Long deckId, SrsState state);

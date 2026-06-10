@@ -8,6 +8,8 @@ import org.fpt.studydeck.exception.ResourceNotFoundException;
 import org.fpt.studydeck.repository.deck.DeckRepository;
 import org.fpt.studydeck.repository.deck.FlashcardRepository;
 import org.fpt.studydeck.repository.deck.FolderRepository;
+import org.fpt.studydeck.repository.srs.SrsCardStateRepository;
+import org.fpt.studydeck.repository.srs.SrsReviewLogRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,15 +23,21 @@ public class DeckService {
     private final DeckRepository deckRepository;
     private final FolderRepository folderRepository;
     private final FlashcardRepository flashcardRepository;
+    private final SrsCardStateRepository srsCardStateRepository;
+    private final SrsReviewLogRepository srsReviewLogRepository;
 
     public DeckService(
         DeckRepository deckRepository,
         FolderRepository folderRepository,
-        FlashcardRepository flashcardRepository
+        FlashcardRepository flashcardRepository,
+        SrsCardStateRepository srsCardStateRepository,
+        SrsReviewLogRepository srsReviewLogRepository
     ) {
         this.deckRepository = deckRepository;
         this.folderRepository = folderRepository;
         this.flashcardRepository = flashcardRepository;
+        this.srsCardStateRepository = srsCardStateRepository;
+        this.srsReviewLogRepository = srsReviewLogRepository;
     }
 
     public Deck createDeck(Long folderId, String title, String description) {
@@ -79,6 +87,8 @@ public class DeckService {
 
     public void deleteDeck(Long id) {
         Deck deck = getDeck(id);
+        srsReviewLogRepository.deleteByFlashcardDeckId(id);
+        srsCardStateRepository.deleteByFlashcardDeckId(id);
         flashcardRepository.deleteAll(flashcardRepository.findByDeckIdOrderByPositionAscIdAsc(id));
         deckRepository.delete(deck);
     }

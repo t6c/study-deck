@@ -7,6 +7,8 @@ import org.fpt.studydeck.domain.deck.Flashcard;
 import org.fpt.studydeck.exception.ResourceNotFoundException;
 import org.fpt.studydeck.repository.deck.DeckRepository;
 import org.fpt.studydeck.repository.deck.FlashcardRepository;
+import org.fpt.studydeck.repository.srs.SrsCardStateRepository;
+import org.fpt.studydeck.repository.srs.SrsReviewLogRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,10 +21,19 @@ public class FlashcardService {
 
     private final DeckRepository deckRepository;
     private final FlashcardRepository flashcardRepository;
+    private final SrsCardStateRepository srsCardStateRepository;
+    private final SrsReviewLogRepository srsReviewLogRepository;
 
-    public FlashcardService(DeckRepository deckRepository, FlashcardRepository flashcardRepository) {
+    public FlashcardService(
+        DeckRepository deckRepository,
+        FlashcardRepository flashcardRepository,
+        SrsCardStateRepository srsCardStateRepository,
+        SrsReviewLogRepository srsReviewLogRepository
+    ) {
         this.deckRepository = deckRepository;
         this.flashcardRepository = flashcardRepository;
+        this.srsCardStateRepository = srsCardStateRepository;
+        this.srsReviewLogRepository = srsReviewLogRepository;
     }
 
     public Flashcard createFlashcard(
@@ -74,6 +85,8 @@ public class FlashcardService {
 
     public void deleteFlashcard(Long id) {
         Flashcard flashcard = getFlashcard(id);
+        srsReviewLogRepository.deleteByFlashcardId(id);
+        srsCardStateRepository.deleteByFlashcardId(id);
         flashcardRepository.delete(flashcard);
     }
 }

@@ -4,16 +4,22 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.fpt.studydeck.domain.deck.DeckVisibility;
+import org.fpt.studydeck.domain.srs.SrsRating;
+import org.fpt.studydeck.dto.srs.SrsReviewRequest;
 import org.fpt.studydeck.exception.ResourceNotFoundException;
 import org.fpt.studydeck.repository.deck.DeckRepository;
 import org.fpt.studydeck.repository.deck.FlashcardRepository;
+import org.fpt.studydeck.repository.srs.SrsCardStateRepository;
+import org.fpt.studydeck.repository.srs.SrsReviewLogRepository;
+import org.fpt.studydeck.service.srs.FsrsScheduler;
+import org.fpt.studydeck.service.srs.SrsReviewService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
 @DataJpaTest
-@Import({DeckService.class, FolderService.class})
+@Import({DeckService.class, FolderService.class, FlashcardService.class, FsrsScheduler.class, SrsReviewService.class})
 class DeckServiceTest {
 
     @Autowired
@@ -27,6 +33,18 @@ class DeckServiceTest {
 
     @Autowired
     private FlashcardRepository flashcardRepository;
+
+    @Autowired
+    private FlashcardService flashcardService;
+
+    @Autowired
+    private SrsReviewService srsReviewService;
+
+    @Autowired
+    private SrsCardStateRepository srsCardStateRepository;
+
+    @Autowired
+    private SrsReviewLogRepository srsReviewLogRepository;
 
     @Test
     void createsDeckWithoutFolder() {
@@ -79,5 +97,19 @@ class DeckServiceTest {
 
         assertThat(deckRepository.findById(deck.getId())).isEmpty();
         assertThat(flashcardRepository.countByDeckId(deck.getId())).isZero();
+    }
+
+    @Test
+    void deletesDeckWithReviewedFlashcardsAndSrsData() {
+        var deck = deckService.createDeck(null, "Korean Basics", null);
+        var flashcard = flashcardService.createFlashcard(deck.getId(), "현장", "site", null, null);
+        srsReviewService.review(flashcard.getId(), new SrsReviewRequest(SrsRating.GOOD, 1200));
+
+        deckService.deleteDeck(deck.getId());
+
+        assertThat(deckRepository.findById(deck.getId())).isEmpty();
+        assertThat(flashcardRepository.countByDeckId(deck.getId())).isZero();
+        assertThat(srsCardStateRepository.countByFlashcardDeckId(deck.getId())).isZero();
+        assertThat(srsReviewLogRepository.count()).isZero();
     }
 }
