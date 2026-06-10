@@ -29,7 +29,7 @@ public class LearnSessionController {
     @ResponseStatus(HttpStatus.CREATED)
     public LearnSessionResponse createSession(
         @PathVariable Long deckId,
-        @RequestBody(required = false) CreateLearnSessionRequest request
+        @Valid @RequestBody(required = false) CreateLearnSessionRequest request
     ) {
         return learnSessionService.createSession(deckId, request);
     }

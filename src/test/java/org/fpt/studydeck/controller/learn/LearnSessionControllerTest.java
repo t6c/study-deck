@@ -91,4 +91,18 @@ class LearnSessionControllerTest {
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.fieldErrors[0].field").value("answer"));
     }
+
+    @Test
+    void postCreateRejectsNegativeLengthOfRounds() throws Exception {
+        var deck = deckService.createDeck(null, "Korean Basics", null);
+        flashcardService.createFlashcard(deck.getId(), "annyeong", "hello", null, null);
+
+        mockMvc.perform(post("/api/v1/decks/{deckId}/learn-sessions", deck.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                    {"lengthOfRounds":-1,"flashcards":true,"multipleChoice":false,"written":false,"trueFalse":false,"starredOnly":false,"shuffleTerms":false}"""))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.fieldErrors[0].field").value("lengthOfRounds"))
+            .andExpect(jsonPath("$.fieldErrors[0].message").value("Length of rounds must be zero or positive."));
+    }
 }

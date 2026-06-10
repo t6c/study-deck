@@ -35,6 +35,7 @@ public class LearnSessionService {
     private static final String NO_CARDS_AVAILABLE = "No cards are available for learn mode.";
     private static final String NO_QUESTION_TYPES = "At least one question type is required.";
     private static final String SESSION_COMPLETED = "Learn session is already completed.";
+    private static final String NEGATIVE_LENGTH = "Length of rounds must be zero or positive.";
 
     private final DeckRepository deckRepository;
     private final FlashcardRepository flashcardRepository;
@@ -56,6 +57,10 @@ public class LearnSessionService {
         CreateLearnSessionRequest effectiveRequest = request == null
             ? new CreateLearnSessionRequest(0, true, false, false, false, false, false)
             : request;
+        if (effectiveRequest.lengthOfRounds() < 0) {
+            throw new InvalidRequestException(NEGATIVE_LENGTH);
+        }
+
         List<LearnQuestionType> questionTypes = questionTypes(effectiveRequest);
         if (questionTypes.isEmpty()) {
             throw new InvalidRequestException(NO_QUESTION_TYPES);
@@ -144,6 +149,10 @@ public class LearnSessionService {
     }
 
     private boolean matchesExpectedAnswer(LearnSessionItem item, String submitted) {
+        if (item.getQuestionType() == LearnQuestionType.TRUE_FALSE) {
+            return submitted != null && "true".equalsIgnoreCase(submitted.trim());
+        }
+
         String expected = item.getPromptSide() == PromptSide.TERM
             ? item.getFlashcard().getDefinition()
             : item.getFlashcard().getTerm();

@@ -16,6 +16,18 @@ public record LearnSessionItemResponse(
 
     public static LearnSessionItemResponse from(LearnSessionItem item) {
         var flashcard = item.getFlashcard();
+        if (item.getQuestionType() == LearnQuestionType.TRUE_FALSE) {
+            return new LearnSessionItemResponse(
+                item.getId(),
+                flashcard.getId(),
+                item.getQuestionType(),
+                item.getPromptSide(),
+                flashcard.getTerm() + " = " + flashcard.getDefinition(),
+                "true",
+                item.getAttempts()
+            );
+        }
+
         boolean promptWithTerm = item.getPromptSide() == PromptSide.TERM;
         return new LearnSessionItemResponse(
             item.getId(),
