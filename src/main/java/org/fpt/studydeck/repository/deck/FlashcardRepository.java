@@ -9,6 +9,8 @@ public interface FlashcardRepository extends JpaRepository<Flashcard, Long> {
 
     List<Flashcard> findByDeckIdOrderByPositionAscIdAsc(Long deckId);
 
+    List<Flashcard> findByDeckIdAndStarredTrueOrderByPositionAscIdAsc(Long deckId);
+
     long countByDeckId(Long deckId);
 
     long countByDeckIdAndStarredTrue(Long deckId);
