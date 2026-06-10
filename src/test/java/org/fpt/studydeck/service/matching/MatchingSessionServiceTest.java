@@ -3,6 +3,8 @@ package org.fpt.studydeck.service.matching;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.time.Instant;
+
 import org.fpt.studydeck.domain.matching.MatchingSessionStatus;
 import org.fpt.studydeck.dto.matching.CreateMatchingSessionRequest;
 import org.fpt.studydeck.dto.matching.MatchingAnswerRequest;
@@ -17,6 +19,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+
+import jakarta.persistence.EntityManager;
 
 @DataJpaTest
 @Import({DeckService.class, FlashcardService.class, ViewerCardService.class, MatchingSessionService.class})
@@ -33,6 +37,9 @@ class MatchingSessionServiceTest {
 
     @Autowired
     private MatchingSessionRepository matchingSessionRepository;
+
+    @Autowired
+    private EntityManager entityManager;
 
     @Test
     void createSessionWithTenCardsReturnsTenItemsAndActiveStatus() {
@@ -148,6 +155,33 @@ class MatchingSessionServiceTest {
             ))
             .isInstanceOf(ResourceNotFoundException.class)
             .hasMessage("Matching session item was not found.");
+    }
+
+    @Test
+    void matchCompletesWhenPersistedStateHasNoUnmatchedItemsDespiteStaleLoadedCollection() {
+        var deck = deckService.createDeck(null, "Korean Basics", null);
+        createCards(deck.getId(), 2);
+        var session = matchingSessionService.createSession(deck.getId(), new CreateMatchingSessionRequest(2, false));
+        var firstItemId = session.items().get(0).id();
+        var secondItemId = session.items().get(1).id();
+
+        entityManager.flush();
+        var staleSession = matchingSessionRepository.findById(session.id()).orElseThrow();
+        assertThat(staleSession.getItems()).hasSize(2);
+
+        entityManager.createQuery("""
+                update MatchingSessionItem item
+                set item.matched = true, item.matchedAt = :matchedAt
+                where item.id = :itemId
+                """)
+            .setParameter("matchedAt", Instant.now())
+            .setParameter("itemId", secondItemId)
+            .executeUpdate();
+
+        var completed = matchingSessionService.match(session.id(), new MatchingAnswerRequest(firstItemId));
+
+        assertThat(completed.status()).isEqualTo(MatchingSessionStatus.COMPLETED.name());
+        assertThat(completed.durationMs()).isGreaterThanOrEqualTo(0);
     }
 
     private void createCards(Long deckId, int count) {

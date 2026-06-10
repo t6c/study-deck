@@ -73,7 +73,7 @@ public class MatchingSessionService {
     }
 
     public MatchingSessionResponse match(Long sessionId, MatchingAnswerRequest request) {
-        MatchingSession session = findSession(sessionId);
+        MatchingSession session = findSessionForUpdate(sessionId);
         if (session.getStatus() == MatchingSessionStatus.COMPLETED) {
             throw new ResourceConflictException(SESSION_COMPLETED);
         }
@@ -84,7 +84,8 @@ public class MatchingSessionService {
             .orElseThrow(() -> new ResourceNotFoundException(ITEM_NOT_FOUND));
 
         item.match();
-        if (session.getItems().stream().allMatch(MatchingSessionItem::isMatched)) {
+        matchingSessionRepository.flush();
+        if (matchingSessionRepository.countUnmatchedItemsBySessionId(sessionId) == 0) {
             session.complete();
         }
 
@@ -92,13 +93,18 @@ public class MatchingSessionService {
     }
 
     public MatchingSessionResponse complete(Long sessionId) {
-        MatchingSession session = findSession(sessionId);
+        MatchingSession session = findSessionForUpdate(sessionId);
         session.complete();
         return toResponse(session);
     }
 
     private MatchingSession findSession(Long sessionId) {
         return matchingSessionRepository.findById(sessionId)
+            .orElseThrow(() -> new ResourceNotFoundException(SESSION_NOT_FOUND));
+    }
+
+    private MatchingSession findSessionForUpdate(Long sessionId) {
+        return matchingSessionRepository.findByIdForUpdate(sessionId)
             .orElseThrow(() -> new ResourceNotFoundException(SESSION_NOT_FOUND));
     }
 
