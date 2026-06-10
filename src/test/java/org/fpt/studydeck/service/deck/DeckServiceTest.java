@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.fpt.studydeck.domain.deck.DeckVisibility;
+import org.fpt.studydeck.exception.ResourceNotFoundException;
 import org.fpt.studydeck.repository.deck.DeckRepository;
 import org.fpt.studydeck.repository.deck.FlashcardRepository;
 import org.junit.jupiter.api.Test;
@@ -51,6 +52,15 @@ class DeckServiceTest {
         assertThatThrownBy(() -> deckService.createDeck(null, " ", null))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("Deck title is required.");
+    }
+
+    @Test
+    void throwsWhenRemovingDeckFromMissingFolder() {
+        var deck = deckService.createDeck(null, "Korean Basics", null);
+
+        assertThatThrownBy(() -> deckService.removeDeckFromFolder(999L, deck.getId()))
+            .isInstanceOf(ResourceNotFoundException.class)
+            .hasMessage("Folder was not found.");
     }
 
     @Test

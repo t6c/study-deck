@@ -67,6 +67,9 @@ public class DeckService {
     }
 
     public Deck removeDeckFromFolder(Long folderId, Long deckId) {
+        if (!folderRepository.existsById(folderId)) {
+            throw new ResourceNotFoundException(FOLDER_NOT_FOUND);
+        }
         Deck deck = getDeck(deckId);
         if (deck.getFolder() != null && deck.getFolder().getId().equals(folderId)) {
             deck.moveToFolder(null);
