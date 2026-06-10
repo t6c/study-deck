@@ -2,6 +2,7 @@ package org.fpt.studydeck.service.sorting;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.fpt.studydeck.domain.deck.Deck;
@@ -61,8 +62,8 @@ public class SortingSessionService {
         }
 
         List<Flashcard> selectedCards = new ArrayList<>(flashcards);
-        if (shuffle && selectedCards.size() > 1) {
-            Collections.reverse(selectedCards);
+        if (shuffle) {
+            shuffle(selectedCards);
         }
 
         SortingSession session = sortingSessionRepository.save(
@@ -103,7 +104,7 @@ public class SortingSessionService {
     private SortingSessionResponse toResponse(SortingSession session) {
         int knownCount = countAnswers(session, SortingAnswer.KNOW);
         int doNotKnowCount = countAnswers(session, SortingAnswer.DO_NOT_KNOW);
-        List<SortingSessionItemResponse> items = session.getItems().stream()
+        List<SortingSessionItemResponse> items = orderedItems(session).stream()
             .map(SortingSessionItemResponse::from)
             .toList();
 
@@ -120,5 +121,23 @@ public class SortingSessionService {
         return Math.toIntExact(session.getItems().stream()
             .filter(item -> item.getAnswer() == answer)
             .count());
+    }
+
+    private List<SortingSessionItem> orderedItems(SortingSession session) {
+        return session.getItems().stream()
+            .sorted(Comparator.comparingInt(SortingSessionItem::getPosition))
+            .toList();
+    }
+
+    private void shuffle(List<Flashcard> cards) {
+        if (cards.size() <= 1) {
+            return;
+        }
+
+        List<Flashcard> original = List.copyOf(cards);
+        Collections.shuffle(cards);
+        if (cards.equals(original)) {
+            Collections.swap(cards, 0, 1);
+        }
     }
 }

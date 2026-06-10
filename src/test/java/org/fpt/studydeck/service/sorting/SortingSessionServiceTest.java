@@ -17,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
+import jakarta.persistence.EntityManager;
+
 @DataJpaTest
 @Import({DeckService.class, FlashcardService.class, ViewerCardService.class, SortingSessionService.class})
 class SortingSessionServiceTest {
@@ -32,6 +34,9 @@ class SortingSessionServiceTest {
 
     @Autowired
     private SortingSessionRepository sortingSessionRepository;
+
+    @Autowired
+    private EntityManager entityManager;
 
     @Test
     void createSessionCreatesOneItemPerSelectedCardAndActiveStatus() {
@@ -126,5 +131,24 @@ class SortingSessionServiceTest {
             ))
             .isInstanceOf(InvalidRequestException.class)
             .hasMessage("No cards are available for sorting.");
+    }
+
+    @Test
+    void reloadedSessionKeepsSelectedItemOrderByPersistedPosition() {
+        var deck = deckService.createDeck(null, "Korean Basics", null);
+        flashcardService.createFlashcard(deck.getId(), "first", "one", null, null);
+        flashcardService.createFlashcard(deck.getId(), "second", "two", null, null);
+        flashcardService.createFlashcard(deck.getId(), "third", "three", null, null);
+
+        var created = sortingSessionService.createSession(deck.getId(), new CreateSortingSessionRequest(false, true));
+        entityManager.flush();
+        entityManager.clear();
+
+        var reloaded = sortingSessionService.getSession(created.id());
+
+        assertThat(reloaded.items()).extracting("position").containsExactly(0, 1, 2);
+        assertThat(reloaded.items()).extracting("id").containsExactlyElementsOf(
+            created.items().stream().map(item -> item.id()).toList()
+        );
     }
 }

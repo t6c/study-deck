@@ -48,13 +48,25 @@ public class ViewerCardService {
         }
         if ("shuffle".equals(normalizedSort)) {
             List<Flashcard> cards = new ArrayList<>(flashcardRepository.findByDeckIdOrderByPositionAscIdAsc(deckId));
-            if (cards.size() > 1) {
-                Collections.reverse(cards);
-            }
+            shuffle(cards);
             return cards;
         }
 
         throw new InvalidRequestException(UNSUPPORTED_SORT);
+    }
+
+    private void shuffle(List<Flashcard> cards) {
+        if (cards.size() <= 1) {
+            return;
+        }
+
+        List<Flashcard> original = List.copyOf(cards);
+        List<Flashcard> reversed = new ArrayList<>(original);
+        Collections.reverse(reversed);
+        Collections.shuffle(cards);
+        if (cards.equals(original) || cards.equals(reversed)) {
+            Collections.swap(cards, 0, 1);
+        }
     }
 
     private String normalizeSort(String sort) {

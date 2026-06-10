@@ -25,7 +25,7 @@ public record SortingSessionItemResponse(
             flashcard.getTermImageUrl(),
             flashcard.getDefinitionImageUrl(),
             flashcard.isStarred(),
-            flashcard.getPosition(),
+            item.getPosition(),
             item.getAnswer()
         );
     }

@@ -32,6 +32,9 @@ public class SortingSessionItem {
     @JoinColumn(name = "flashcard_id", nullable = false)
     private Flashcard flashcard;
 
+    @Column(nullable = false)
+    private int position;
+
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
     private SortingAnswer answer;
@@ -41,7 +44,7 @@ public class SortingSessionItem {
     protected SortingSessionItem() {
     }
 
-    public static SortingSessionItem create(SortingSession session, Flashcard flashcard) {
+    public static SortingSessionItem create(SortingSession session, Flashcard flashcard, int position) {
         if (flashcard == null) {
             throw new IllegalArgumentException("Flashcard is required.");
         }
@@ -49,6 +52,7 @@ public class SortingSessionItem {
         SortingSessionItem item = new SortingSessionItem();
         item.session = session;
         item.flashcard = flashcard;
+        item.position = position;
         return item;
     }
 
@@ -67,6 +71,10 @@ public class SortingSessionItem {
 
     public Flashcard getFlashcard() {
         return flashcard;
+    }
+
+    public int getPosition() {
+        return position;
     }
 
     public SortingAnswer getAnswer() {

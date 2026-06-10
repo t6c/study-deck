@@ -19,6 +19,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 
 @Entity
@@ -49,6 +50,7 @@ public class SortingSession {
     private Instant completedAt;
 
     @OneToMany(mappedBy = "session", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("position ASC")
     private List<SortingSessionItem> items = new ArrayList<>();
 
     protected SortingSession() {
@@ -65,12 +67,14 @@ public class SortingSession {
         session.starredOnly = starredOnly;
         session.shuffle = shuffle;
         session.startedAt = Instant.now();
-        flashcards.forEach(session::addItem);
+        for (int position = 0; position < flashcards.size(); position++) {
+            session.addItem(flashcards.get(position), position);
+        }
         return session;
     }
 
-    private void addItem(Flashcard flashcard) {
-        items.add(SortingSessionItem.create(this, flashcard));
+    private void addItem(Flashcard flashcard, int position) {
+        items.add(SortingSessionItem.create(this, flashcard, position));
     }
 
     public void complete() {
