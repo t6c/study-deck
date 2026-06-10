@@ -63,7 +63,7 @@ public class PracticeTest {
         String settingsJson,
         List<Flashcard> flashcards,
         List<LearnQuestionType> questionTypes,
-        PromptSide promptSide
+        List<PromptSide> promptSides
     ) {
         if (deck == null) {
             throw new IllegalArgumentException("Deck is required.");
@@ -77,6 +77,7 @@ public class PracticeTest {
         practiceTest.scorePercent = 0.0;
         for (int position = 0; position < flashcards.size(); position++) {
             LearnQuestionType questionType = questionTypes.get(position % questionTypes.size());
+            PromptSide promptSide = promptSides.get(position % promptSides.size());
             practiceTest.addQuestion(flashcards.get(position), questionType, promptSide, position);
         }
         return practiceTest;

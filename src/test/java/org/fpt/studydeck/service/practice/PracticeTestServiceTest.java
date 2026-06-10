@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.fpt.studydeck.domain.learn.LearnQuestionType;
+import org.fpt.studydeck.domain.learn.PromptSide;
 import org.fpt.studydeck.domain.practice.PracticeTestStatus;
 import org.fpt.studydeck.dto.practice.CreatePracticeTestRequest;
 import org.fpt.studydeck.dto.practice.PracticeAnswerRequest;
@@ -53,6 +54,24 @@ class PracticeTestServiceTest {
                 LearnQuestionType.MULTIPLE_CHOICE,
                 LearnQuestionType.WRITTEN
             );
+    }
+
+    @Test
+    void createPracticeTestCyclesPromptSidesWhenBothAnswerFormatsSelected() {
+        var deck = deckService.createDeck(null, "Korean Basics", null);
+        createCards(deck.getId(), 4);
+
+        var test = practiceTestService.createPracticeTest(
+            deck.getId(),
+            new CreatePracticeTestRequest(4, false, true, false, false, true, true)
+        );
+
+        assertThat(test.questions())
+            .extracting("promptSide")
+            .containsExactly(PromptSide.TERM, PromptSide.DEFINITION, PromptSide.TERM, PromptSide.DEFINITION);
+        assertThat(test.questions())
+            .extracting("prompt")
+            .containsExactly("term 1", "definition 2", "term 3", "definition 4");
     }
 
     @Test

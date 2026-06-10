@@ -74,9 +74,8 @@ public class PracticeTestService {
         }
 
         List<Flashcard> selectedCards = new ArrayList<>(availableCards.subList(0, request.questionCount()));
-        PromptSide promptSide = request.answerWithDefinition() ? PromptSide.TERM : PromptSide.DEFINITION;
         PracticeTest practiceTest = practiceTestRepository.save(
-            PracticeTest.create(deck, settingsJson(request), selectedCards, questionTypes, promptSide)
+            PracticeTest.create(deck, settingsJson(request), selectedCards, questionTypes, promptSides(request))
         );
         return toResponse(practiceTest);
     }
@@ -152,6 +151,17 @@ public class PracticeTestService {
             questionTypes.add(LearnQuestionType.TRUE_FALSE);
         }
         return questionTypes;
+    }
+
+    private List<PromptSide> promptSides(CreatePracticeTestRequest request) {
+        List<PromptSide> promptSides = new ArrayList<>();
+        if (request.answerWithDefinition()) {
+            promptSides.add(PromptSide.TERM);
+        }
+        if (request.answerWithTerm()) {
+            promptSides.add(PromptSide.DEFINITION);
+        }
+        return promptSides;
     }
 
     private String settingsJson(CreatePracticeTestRequest request) {
