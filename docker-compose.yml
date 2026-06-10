@@ -1,0 +1,15 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: study-deck-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: study_deck
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    ports:
+      - "3306:3306"
+    volumes:
+      - study_deck_mysql_data:/var/lib/mysql
+
+volumes:
+  study_deck_mysql_data:
