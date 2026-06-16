@@ -37,6 +37,14 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(HttpStatus.CONFLICT, exception.getMessage(), request, List.of());
     }
 
+    @ExceptionHandler(AuthenticationFailedException.class)
+    public ResponseEntity<ApiErrorResponse> handleAuthenticationFailed(
+        AuthenticationFailedException exception,
+        HttpServletRequest request
+    ) {
+        return buildErrorResponse(HttpStatus.UNAUTHORIZED, exception.getMessage(), request, List.of());
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiErrorResponse> handleMethodArgumentNotValid(
         MethodArgumentNotValidException exception,

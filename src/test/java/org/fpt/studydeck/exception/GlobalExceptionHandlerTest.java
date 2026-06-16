@@ -11,11 +11,13 @@ import java.util.List;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import org.junit.jupiter.api.Test;
-import org.fpt.studydeck.config.SecurityConfig;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,11 +25,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @WebMvcTest(controllers = GlobalExceptionHandlerTest.ThrowingController.class)
-@Import({GlobalExceptionHandler.class, SecurityConfig.class, GlobalExceptionHandlerTest.ThrowingController.class})
+@AutoConfigureMockMvc(addFilters = false)
+@Import({GlobalExceptionHandler.class, GlobalExceptionHandlerTest.ThrowingController.class})
 class GlobalExceptionHandlerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @MockBean
+    private org.fpt.studydeck.security.JwtService jwtService;
+
+    @MockBean
+    private UserDetailsService userDetailsService;
 
     @Test
     void returnsNotFoundApiErrorForResourceNotFoundException() throws Exception {
