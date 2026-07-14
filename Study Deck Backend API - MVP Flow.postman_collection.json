@@ -1,0 +1,1899 @@
+{
+  "info": {
+    "_postman_id": "83c29425-b2d2-442b-8743-e0fe5b746d49",
+    "name": "Study Deck Backend API - MVP Flow",
+    "description": "Layered Spring Boot backend collection for the Knowt/Anki-style Study Deck MVP. Run folders in numeric order. Requests use collection variables and realistic sample data for English vocabulary learning with Vietnamese definitions. Base URL defaults to local Spring Boot at http://localhost:8080.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "38187414"
+  },
+  "item": [
+    {
+      "name": "00 Setup - Folder, Deck, Cards",
+      "item": [
+        {
+          "name": "List folders",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/folders",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "folders"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create folder - English Vocabulary",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"English Vocabulary Practice\",\n  \"description\": \"Academic English words with Vietnamese meanings for daily student review.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/folders",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "folders"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "201 Created - English Vocabulary folder",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"English Vocabulary Practice\",\n  \"description\": \"Academic English words with Vietnamese meanings for daily student review.\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/folders",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "folders"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "value": "application/json",
+                  "key": "Content-Type"
+                }
+              ],
+              "cookie": [],
+              "responseTime": "78 ms",
+              "body": "{\n  \"id\": 1,\n  \"name\": \"English Vocabulary Practice\",\n  \"description\": \"Academic English words with Vietnamese meanings for daily student review.\",\n  \"position\": 0,\n  \"deckCount\": 0,\n  \"createdAt\": \"2026-06-11T02:20:00Z\",\n  \"updatedAt\": \"2026-06-11T02:20:00Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get folder by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/folders/{{folder_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "folders",
+                "{{folder_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update folder",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"English Vocabulary Practice - Unit 1\",\n  \"description\": \"Updated folder for high-frequency academic words.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/folders/{{folder_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "folders",
+                "{{folder_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List decks",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/decks",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "decks"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create deck - Academic English Words",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"folderId\": {{folder_id}},\n  \"title\": \"Academic English Words\",\n  \"description\": \"English terms with Vietnamese definitions for school vocabulary review.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/decks",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "decks"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "201 Created - Academic English Words deck",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"folderId\": {{folder_id}},\n  \"title\": \"Academic English Words\",\n  \"description\": \"English terms with Vietnamese definitions for school vocabulary review.\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/decks",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "decks"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "value": "application/json",
+                  "key": "Content-Type"
+                }
+              ],
+              "cookie": [],
+              "responseTime": "91 ms",
+              "body": "{\n  \"id\": 1,\n  \"folderId\": 1,\n  \"title\": \"Academic English Words\",\n  \"description\": \"English terms with Vietnamese definitions for school vocabulary review.\",\n  \"visibility\": \"PRIVATE\",\n  \"flashcardCount\": 0,\n  \"createdAt\": \"2026-06-11T02:21:00Z\",\n  \"updatedAt\": \"2026-06-11T02:21:00Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get deck by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/decks/{{deck_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "decks",
+                "{{deck_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update deck",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Academic English Words - MVP Demo\",\n  \"description\": \"Deck used to exercise CRUD, SRS, learn, practice test, sorting, and matching with English-Vietnamese flashcards.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/decks/{{deck_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "decks",
+                "{{deck_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Attach deck to folder",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/folders/{{folder_id}}/decks/{{deck_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "folders",
+                "{{folder_id}}",
+                "decks",
+                "{{deck_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Remove deck from folder",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/folders/{{folder_id}}/decks/{{deck_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "folders",
+                "{{folder_id}}",
+                "decks",
+                "{{deck_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create flashcard - diligent",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"term\": \"diligent\",\n  \"definition\": \"chăm chỉ, siêng năng\",\n  \"termImageUrl\": \"https://example.com/assets/english/diligent-term.png\",\n  \"definitionImageUrl\": \"https://example.com/assets/english/diligent-definition.png\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/decks/{{deck_id}}/flashcards",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "decks",
+                "{{deck_id}}",
+                "flashcards"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "201 Created - diligent flashcard",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"term\": \"diligent\",\n  \"definition\": \"chăm chỉ, siêng năng\",\n  \"termImageUrl\": \"https://example.com/assets/english/diligent-term.png\",\n  \"definitionImageUrl\": \"https://example.com/assets/english/diligent-definition.png\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/decks/{{deck_id}}/flashcards",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "decks",
+                    "{{deck_id}}",
+                    "flashcards"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "value": "application/json",
+                  "key": "Content-Type"
+                }
+              ],
+              "cookie": [],
+              "responseTime": "84 ms",
+              "body": "{\n  \"id\": 1,\n  \"deckId\": 1,\n  \"term\": \"diligent\",\n  \"definition\": \"chăm chỉ, siêng năng\",\n  \"termImageUrl\": \"https://example.com/assets/english/diligent-term.png\",\n  \"definitionImageUrl\": \"https://example.com/assets/english/diligent-definition.png\",\n  \"position\": 0,\n  \"starred\": false,\n  \"createdAt\": \"2026-06-11T02:22:00Z\",\n  \"updatedAt\": \"2026-06-11T02:22:00Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Create flashcard - ambiguous",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"term\": \"ambiguous\",\n  \"definition\": \"mơ hồ, có nhiều cách hiểu\",\n  \"termImageUrl\": null,\n  \"definitionImageUrl\": null\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/decks/{{deck_id}}/flashcards",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "decks",
+                "{{deck_id}}",
+                "flashcards"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create flashcard - resilient",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"term\": \"resilient\",\n  \"definition\": \"kiên cường, mau phục hồi sau khó khăn\",\n  \"termImageUrl\": null,\n  \"definitionImageUrl\": null\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/decks/{{deck_id}}/flashcards",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "decks",
+                "{{deck_id}}",
+                "flashcards"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List deck flashcards",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/decks/{{deck_id}}/flashcards",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "decks",
+                "{{deck_id}}",
+                "flashcards"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200 OK - English-Vietnamese flashcards list",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/decks/{{deck_id}}/flashcards",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "decks",
+                    "{{deck_id}}",
+                    "flashcards"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": "66 ms",
+              "body": "[\n  {\n    \"id\": 1,\n    \"deckId\": 1,\n    \"term\": \"diligent learner\",\n    \"definition\": \"người học chăm chỉ và có kỷ luật\",\n    \"position\": 0,\n    \"starred\": true,\n    \"termImageUrl\": \"https://example.com/assets/english/diligent-learner-term.png\",\n    \"definitionImageUrl\": \"https://example.com/assets/english/diligent-learner-definition.png\"\n  },\n  {\n    \"id\": 2,\n    \"deckId\": 1,\n    \"term\": \"ambiguous\",\n    \"definition\": \"mơ hồ, có nhiều cách hiểu\",\n    \"position\": 1,\n    \"starred\": false,\n    \"termImageUrl\": null,\n    \"definitionImageUrl\": null\n  },\n  {\n    \"id\": 3,\n    \"deckId\": 1,\n    \"term\": \"resilient\",\n    \"definition\": \"kiên cường, mau phục hồi sau khó khăn\",\n    \"position\": 2,\n    \"starred\": false,\n    \"termImageUrl\": null,\n    \"definitionImageUrl\": null\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Update flashcard",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"term\": \"diligent learner\",\n  \"definition\": \"người học chăm chỉ và có kỷ luật\",\n  \"termImageUrl\": \"https://example.com/assets/english/diligent-learner-term.png\",\n  \"definitionImageUrl\": \"https://example.com/assets/english/diligent-learner-definition.png\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/flashcards/{{flashcard_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "flashcards",
+                "{{flashcard_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Star flashcard",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"starred\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/flashcards/{{flashcard_id}}/star",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "flashcards",
+                "{{flashcard_id}}",
+                "star"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "Create realistic content first. These requests capture IDs into collection variables for later folders."
+    },
+    {
+      "name": "01 Deck Study Surfaces",
+      "item": [
+        {
+          "name": "Deck summary",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/decks/{{deck_id}}/summary",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "decks",
+                "{{deck_id}}",
+                "summary"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200 OK - English vocabulary deck summary",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/decks/{{deck_id}}/summary",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "decks",
+                    "{{deck_id}}",
+                    "summary"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "value": "application/json",
+                  "key": "Content-Type"
+                }
+              ],
+              "cookie": [],
+              "responseTime": "51 ms",
+              "body": "{\n  \"deckId\": 1,\n  \"title\": \"Academic English Words - MVP Demo\",\n  \"description\": \"Deck used to exercise CRUD, SRS, learn, practice test, sorting, and matching with English-Vietnamese flashcards.\",\n  \"flashcardCount\": 3,\n  \"starredCount\": 1,\n  \"studiedByCount\": 0,\n  \"rating\": 0.0\n}"
+            }
+          ]
+        },
+        {
+          "name": "Viewer cards - original order",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "?sort=created&mode=default",
+              "query": [
+                {
+                  "key": "sort",
+                  "value": "created"
+                },
+                {
+                  "key": "mode",
+                  "value": "default"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200 OK - English-Vietnamese viewer cards",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "?sort=created&mode=default",
+                  "query": [
+                    {
+                      "key": "sort",
+                      "value": "created"
+                    },
+                    {
+                      "key": "mode",
+                      "value": "default"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": "48 ms",
+              "body": "[\n  {\n    \"id\": 1,\n    \"term\": \"diligent learner\",\n    \"definition\": \"người học chăm chỉ và có kỷ luật\",\n    \"position\": 0,\n    \"starred\": true,\n    \"known\": null\n  },\n  {\n    \"id\": 2,\n    \"term\": \"ambiguous\",\n    \"definition\": \"mơ hồ, có nhiều cách hiểu\",\n    \"position\": 1,\n    \"starred\": false,\n    \"known\": null\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Viewer cards - shuffled sorting mode",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "?sort=random&mode=sorting",
+              "query": [
+                {
+                  "key": "sort",
+                  "value": "random"
+                },
+                {
+                  "key": "mode",
+                  "value": "sorting"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "Read-only deck screens used by dashboard, flashcard viewer, and swipe/card-sorting UI."
+    },
+    {
+      "name": "02 Flashcard Sorting Mode",
+      "item": [
+        {
+          "name": "Create sorting session",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"starredOnly\": false,\n  \"shuffle\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/decks/{{deck_id}}/sorting-sessions",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "decks",
+                "{{deck_id}}",
+                "sorting-sessions"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "201 Created - English vocabulary sorting session",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"starredOnly\": false,\n  \"shuffle\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/decks/{{deck_id}}/sorting-sessions",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "decks",
+                    "{{deck_id}}",
+                    "sorting-sessions"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "value": "application/json",
+                  "key": "Content-Type"
+                }
+              ],
+              "cookie": [],
+              "responseTime": "88 ms",
+              "body": "{\n  \"id\": 1,\n  \"deckId\": 1,\n  \"status\": \"ACTIVE\",\n  \"starredOnly\": false,\n  \"shuffle\": true,\n  \"totalItems\": 3,\n  \"knownCount\": 0,\n  \"doNotKnowCount\": 0,\n  \"items\": [\n    {\n      \"id\": 1,\n      \"flashcardId\": 1,\n      \"term\": \"diligent learner\",\n      \"definition\": \"người học chăm chỉ và có kỷ luật\",\n      \"position\": 0,\n      \"answer\": null\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get sorting session",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/sorting-sessions/{{sorting_session_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "sorting-sessions",
+                "{{sorting_session_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Answer sorting item - Know",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"itemId\": {{sorting_item_id}},\n  \"answer\": \"KNOW\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/sorting-sessions/{{sorting_session_id}}/answers",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "sorting-sessions",
+                "{{sorting_session_id}}",
+                "answers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Answer sorting item - Do not know",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"itemId\": {{sorting_item_id}},\n  \"answer\": \"DO_NOT_KNOW\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/sorting-sessions/{{sorting_session_id}}/answers",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "sorting-sessions",
+                "{{sorting_session_id}}",
+                "answers"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "Tinder-like Know / Do Not Know sorting flow."
+    },
+    {
+      "name": "03 Spaced Repetition - FSRS",
+      "item": [
+        {
+          "name": "Get due SRS cards",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/decks/{{deck_id}}/srs/due",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "decks",
+                "{{deck_id}}",
+                "srs",
+                "due"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create SRS review session - due cards snapshot",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/decks/{{deck_id}}/srs/review-sessions",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "decks",
+                "{{deck_id}}",
+                "srs",
+                "review-sessions"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Review flashcard - Again",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rating\": \"AGAIN\",\n  \"durationMs\": 4200\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/flashcards/{{flashcard_id}}/srs/reviews",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "flashcards",
+                "{{flashcard_id}}",
+                "srs",
+                "reviews"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200 OK - FSRS Again review result for diligent learner",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"rating\": \"AGAIN\",\n  \"durationMs\": 4200\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/flashcards/{{flashcard_id}}/srs/reviews",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "flashcards",
+                    "{{flashcard_id}}",
+                    "srs",
+                    "reviews"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "value": "application/json",
+                  "key": "Content-Type"
+                }
+              ],
+              "cookie": [],
+              "responseTime": "97 ms",
+              "body": "{\n  \"flashcardId\": 1,\n  \"rating\": \"AGAIN\",\n  \"previousState\": \"NEW\",\n  \"nextState\": \"LEARNING\",\n  \"dueBefore\": \"2026-06-11T02:20:00Z\",\n  \"dueAfter\": \"2026-06-11T02:21:00Z\",\n  \"scheduledDays\": 0,\n  \"stability\": 0.4,\n  \"difficulty\": 7.3,\n  \"reps\": 1,\n  \"lapses\": 0\n}"
+            }
+          ]
+        },
+        {
+          "name": "Review flashcard - Good",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rating\": \"GOOD\",\n  \"durationMs\": 2100\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/flashcards/{{flashcard_id}}/srs/reviews",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "flashcards",
+                "{{flashcard_id}}",
+                "srs",
+                "reviews"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get flashcard SRS state",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/flashcards/{{flashcard_id}}/srs-state",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "flashcards",
+                "{{flashcard_id}}",
+                "srs-state"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get deck SRS stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/decks/{{deck_id}}/srs/stats",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "decks",
+                "{{deck_id}}",
+                "srs",
+                "stats"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get persisted SRS session - expected MVP 400",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/srs/review-sessions/{{srs_session_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "srs",
+                "review-sessions",
+                "{{srs_session_id}}"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "400 Bad Request - SRS sessions not persisted in MVP",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/srs/review-sessions/{{srs_session_id}}",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "srs",
+                    "review-sessions",
+                    "{{srs_session_id}}"
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "value": "application/json",
+                  "key": "Content-Type"
+                }
+              ],
+              "cookie": [],
+              "responseTime": "39 ms",
+              "body": "{\n  \"status\": 400,\n  \"error\": \"Bad Request\",\n  \"message\": \"SRS review sessions are not persisted in MVP.\",\n  \"path\": \"/api/v1/srs/review-sessions/1\",\n  \"timestamp\": \"2026-06-11T02:23:00Z\",\n  \"fieldErrors\": []\n}"
+            }
+          ]
+        },
+        {
+          "name": "Review persisted SRS session - expected MVP 400",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/srs/review-sessions/{{srs_session_id}}/reviews",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "srs",
+                "review-sessions",
+                "{{srs_session_id}}",
+                "reviews"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "FSRS/Anki-like review flow. MVP exposes direct card reviews; persisted SRS review sessions intentionally return 400."
+    },
+    {
+      "name": "04 Learn Mode",
+      "item": [
+        {
+          "name": "Create learn session",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"lengthOfRounds\": 7,\n  \"flashcards\": true,\n  \"multipleChoice\": true,\n  \"written\": true,\n  \"trueFalse\": true,\n  \"starredOnly\": false,\n  \"shuffleTerms\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/decks/{{deck_id}}/learn-sessions",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "decks",
+                "{{deck_id}}",
+                "learn-sessions"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "201 Created - English-Vietnamese learn session",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"lengthOfRounds\": 7,\n  \"flashcards\": true,\n  \"multipleChoice\": true,\n  \"written\": true,\n  \"trueFalse\": true,\n  \"starredOnly\": false,\n  \"shuffleTerms\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/decks/{{deck_id}}/learn-sessions",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "decks",
+                    "{{deck_id}}",
+                    "learn-sessions"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "value": "application/json",
+                  "key": "Content-Type"
+                }
+              ],
+              "cookie": [],
+              "responseTime": "103 ms",
+              "body": "{\n  \"id\": 1,\n  \"deckId\": 1,\n  \"status\": \"ACTIVE\",\n  \"items\": [\n    {\n      \"id\": 1,\n      \"flashcardId\": 1,\n      \"questionType\": \"WRITTEN\",\n      \"promptSide\": \"TERM\",\n      \"prompt\": \"diligent learner\",\n      \"answer\": \"người học chăm chỉ và có kỷ luật\",\n      \"choices\": [],\n      \"status\": \"ACTIVE\",\n      \"attempts\": 0,\n      \"correctCount\": 0,\n      \"wrongCount\": 0\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get learn session",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/learn-sessions/{{learn_session_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "learn-sessions",
+                "{{learn_session_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Answer learn item",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"itemId\": {{learn_item_id}},\n  \"answer\": \"người học chăm chỉ và có kỷ luật\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/learn-sessions/{{learn_session_id}}/answers",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "learn-sessions",
+                "{{learn_session_id}}",
+                "answers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Complete learn session",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/learn-sessions/{{learn_session_id}}/complete",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "learn-sessions",
+                "{{learn_session_id}}",
+                "complete"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "Normal Learn flow with mixed question types and smart grading-style answers."
+    },
+    {
+      "name": "05 Practice Test",
+      "item": [
+        {
+          "name": "Create practice test",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"questionCount\": 6,\n  \"multipleChoice\": true,\n  \"written\": true,\n  \"trueFalse\": true,\n  \"starredOnly\": false,\n  \"answerWithTerm\": true,\n  \"answerWithDefinition\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/decks/{{deck_id}}/practice-tests",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "decks",
+                "{{deck_id}}",
+                "practice-tests"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "201 Created - English-Vietnamese practice test",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"questionCount\": 6,\n  \"multipleChoice\": true,\n  \"written\": true,\n  \"trueFalse\": true,\n  \"starredOnly\": false,\n  \"answerWithTerm\": true,\n  \"answerWithDefinition\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/decks/{{deck_id}}/practice-tests",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "decks",
+                    "{{deck_id}}",
+                    "practice-tests"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "value": "application/json",
+                  "key": "Content-Type"
+                }
+              ],
+              "cookie": [],
+              "responseTime": "109 ms",
+              "body": "{\n  \"id\": 1,\n  \"deckId\": 1,\n  \"status\": \"ACTIVE\",\n  \"scorePercent\": 0.0,\n  \"questions\": [\n    {\n      \"id\": 1,\n      \"flashcardId\": 1,\n      \"questionType\": \"WRITTEN\",\n      \"promptSide\": \"TERM\",\n      \"prompt\": \"diligent learner\",\n      \"choices\": [],\n      \"submittedAnswer\": null,\n      \"correct\": null\n    },\n    {\n      \"id\": 2,\n      \"flashcardId\": 2,\n      \"questionType\": \"MULTIPLE_CHOICE\",\n      \"promptSide\": \"DEFINITION\",\n      \"prompt\": \"mơ hồ, có nhiều cách hiểu\",\n      \"choices\": [\"ambiguous\", \"resilient\", \"diligent\"],\n      \"submittedAnswer\": null,\n      \"correct\": null\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get practice test",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/practice-tests/{{practice_test_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "practice-tests",
+                "{{practice_test_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Answer practice question",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"questionId\": {{practice_question_id}},\n  \"answer\": \"người học chăm chỉ và có kỷ luật\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/practice-tests/{{practice_test_id}}/answers",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "practice-tests",
+                "{{practice_test_id}}",
+                "answers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Submit practice test",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/practice-tests/{{practice_test_id}}/submit",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "practice-tests",
+                "{{practice_test_id}}",
+                "submit"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "Practice test generation and grading flow."
+    },
+    {
+      "name": "06 Matching Mode",
+      "item": [
+        {
+          "name": "Create matching session",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cardCount\": 10,\n  \"starredOnly\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/decks/{{deck_id}}/matching-sessions",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "decks",
+                "{{deck_id}}",
+                "matching-sessions"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "201 Created - English-Vietnamese matching session",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"cardCount\": 10,\n  \"starredOnly\": false\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/decks/{{deck_id}}/matching-sessions",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "decks",
+                    "{{deck_id}}",
+                    "matching-sessions"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "value": "application/json",
+                  "key": "Content-Type"
+                }
+              ],
+              "cookie": [],
+              "responseTime": "96 ms",
+              "body": "{\n  \"id\": 1,\n  \"deckId\": 1,\n  \"status\": \"ACTIVE\",\n  \"cardCount\": 3,\n  \"durationMs\": 0,\n  \"items\": [\n    {\n      \"id\": 1,\n      \"flashcardId\": 1,\n      \"term\": \"diligent learner\",\n      \"definition\": \"người học chăm chỉ và có kỷ luật\",\n      \"matched\": false,\n      \"position\": 0\n    },\n    {\n      \"id\": 2,\n      \"flashcardId\": 2,\n      \"term\": \"ambiguous\",\n      \"definition\": \"mơ hồ, có nhiều cách hiểu\",\n      \"matched\": false,\n      \"position\": 1\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get matching session",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/matching-sessions/{{matching_session_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "matching-sessions",
+                "{{matching_session_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Match item",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"itemId\": {{matching_item_id}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/matching-sessions/{{matching_session_id}}/matches",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "matching-sessions",
+                "{{matching_session_id}}",
+                "matches"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Complete matching session",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/matching-sessions/{{matching_session_id}}/complete",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "matching-sessions",
+                "{{matching_session_id}}",
+                "complete"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "Create a matching board, mark matched items, and complete the timed session."
+    },
+    {
+      "name": "07 Cleanup - Destructive",
+      "item": [
+        {
+          "name": "Delete flashcard",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/flashcards/{{flashcard_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "flashcards",
+                "{{flashcard_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete deck",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/decks/{{deck_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "decks",
+                "{{deck_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete folder",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/folders/{{folder_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "folders",
+                "{{folder_id}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "Optional cleanup routes. Run only when you are done with demo data."
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3ODE1OTM4NTQsInN1YiI6InVzZXJAZXhhbXBsZS5jb20iLCJleHAiOjE3ODE2ODAyNTR9.G7QtycIgoA5PEGZYXTePV3jH9MjWtGwMxV6mJqeBCAY",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080",
+      "description": "Local backend URL from README."
+    },
+    {
+      "key": "folder_id",
+      "value": "1",
+      "description": "Captured from 00 Setup / Create folder."
+    },
+    {
+      "key": "deck_id",
+      "value": "1",
+      "description": "Captured from 00 Setup / Create deck."
+    },
+    {
+      "key": "flashcard_id",
+      "value": "1",
+      "description": "Captured from 00 Setup / Create first flashcard."
+    },
+    {
+      "key": "sorting_session_id",
+      "value": "1",
+      "description": "Captured from sorting session creation."
+    },
+    {
+      "key": "sorting_item_id",
+      "value": "1",
+      "description": "Use an item id from sorting session response."
+    },
+    {
+      "key": "learn_session_id",
+      "value": "1",
+      "description": "Captured from learn session creation."
+    },
+    {
+      "key": "learn_item_id",
+      "value": "1",
+      "description": "Use an item id from learn session response."
+    },
+    {
+      "key": "matching_session_id",
+      "value": "1",
+      "description": "Captured from matching session creation."
+    },
+    {
+      "key": "matching_item_id",
+      "value": "1",
+      "description": "Use an item id from matching session response."
+    },
+    {
+      "key": "practice_test_id",
+      "value": "1",
+      "description": "Captured from practice test creation."
+    },
+    {
+      "key": "practice_question_id",
+      "value": "1",
+      "description": "Use a question id from practice test response."
+    },
+    {
+      "key": "srs_session_id",
+      "value": "1",
+      "description": "Placeholder only. SRS sessions are not persisted in MVP."
+    }
+  ]
+}

@@ -37,10 +37,35 @@ OpenAPI JSON:
 http://localhost:8080/v3/api-docs
 ```
 
+## Run The Frontend
+
+In a second terminal:
+
+```powershell
+cd frontend
+npm install
+npm run dev
+```
+
+Frontend URL:
+
+```text
+http://localhost:5173
+```
+
+The frontend proxies `/api` requests to the Spring Boot API at `http://localhost:8080`.
+
 ## Run Tests
 
 ```powershell
 .\mvnw.cmd test
+```
+
+Frontend tests:
+
+```powershell
+cd frontend
+npm test
 ```
 
 ## Stop MySQL
