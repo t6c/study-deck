@@ -2,6 +2,7 @@ import {
   ActionIcon,
   AppShell,
   Burger,
+  Divider,
   Group,
   NavLink,
   ScrollArea,
@@ -71,12 +72,20 @@ export function AppLayout() {
         <Group h="100%" px="md" justify="space-between">
           <Group gap="sm">
             <Burger opened={mobileOpened} onClick={toggleMobile} hiddenFrom="sm" size="sm" aria-label="Toggle navigation" />
-            <Title order={3}>Study Deck</Title>
+            <Text fw={700}>Study workspace</Text>
           </Group>
           <Group gap="xs">
             <Text size="sm" c="dimmed" visibleFrom="xs">
               {user?.displayName ?? user?.email}
             </Text>
+          </Group>
+        </Group>
+      </AppShell.Header>
+
+      <AppShell.Navbar p="sm">
+        <Stack h="100%" gap="sm">
+          <Group justify={desktopOpened ? 'space-between' : 'center'} px="xs" py={4}>
+            {desktopOpened ? <Title order={3}>Study Deck</Title> : null}
             <Tooltip label={desktopOpened ? 'Collapse sidebar' : 'Expand sidebar'}>
               <ActionIcon
                 aria-label={desktopOpened ? 'Collapse sidebar' : 'Expand sidebar'}
@@ -88,11 +97,7 @@ export function AppLayout() {
               </ActionIcon>
             </Tooltip>
           </Group>
-        </Group>
-      </AppShell.Header>
-
-      <AppShell.Navbar p="sm">
-        <Stack h="100%" gap="sm">
+          <Divider />
           <ScrollArea flex={1}>
             <Stack gap="md">
               {navSections.map((section) => (

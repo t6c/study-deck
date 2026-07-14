@@ -105,6 +105,43 @@ export function DeckDetailPage() {
               }
             />
           ) : null}
+
+          {flashcards.data && flashcards.data.length > 0 ? (
+            <Stack gap="md">
+              <Group justify="space-between">
+                <Title order={2}>Cards</Title>
+                <Button component={Link} to={`/decks/${parsedDeckId}/flashcards/edit`} variant="light" leftSection={<IconEdit size={16} />}>
+                  Manage cards
+                </Button>
+              </Group>
+              <SimpleGrid cols={{ base: 1, md: 2 }}>
+                {flashcards.data.map((card, index) => (
+                  <Card key={card.id} withBorder radius="sm">
+                    <Stack gap="sm">
+                      <Group justify="space-between" align="flex-start">
+                        <Badge variant="light">#{index + 1}</Badge>
+                        {card.starred ? <Badge color="yellow">Starred</Badge> : null}
+                      </Group>
+                      <Group align="stretch" gap="lg" wrap="nowrap">
+                        <Stack gap={4} flex={1}>
+                          <Text size="xs" c="dimmed" fw={700} tt="uppercase">
+                            Term
+                          </Text>
+                          <Text fw={700}>{card.term}</Text>
+                        </Stack>
+                        <Stack gap={4} flex={1}>
+                          <Text size="xs" c="dimmed" fw={700} tt="uppercase">
+                            Definition
+                          </Text>
+                          <Text>{card.definition}</Text>
+                        </Stack>
+                      </Group>
+                    </Stack>
+                  </Card>
+                ))}
+              </SimpleGrid>
+            </Stack>
+          ) : null}
         </>
       ) : null}
     </Stack>

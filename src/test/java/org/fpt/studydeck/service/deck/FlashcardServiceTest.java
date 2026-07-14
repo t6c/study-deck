@@ -4,18 +4,20 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.fpt.studydeck.domain.srs.SrsRating;
+import org.fpt.studydeck.dto.learn.CreateLearnSessionRequest;
 import org.fpt.studydeck.dto.srs.SrsReviewRequest;
 import org.fpt.studydeck.repository.srs.SrsCardStateRepository;
 import org.fpt.studydeck.repository.srs.SrsReviewLogRepository;
 import org.fpt.studydeck.service.srs.FsrsScheduler;
 import org.fpt.studydeck.service.srs.SrsReviewService;
+import org.fpt.studydeck.service.learn.LearnSessionService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
 @DataJpaTest
-@Import({DeckService.class, FlashcardService.class, FsrsScheduler.class, SrsReviewService.class})
+@Import({DeckService.class, FlashcardService.class, FsrsScheduler.class, SrsReviewService.class, LearnSessionService.class})
 class FlashcardServiceTest {
 
     @Autowired
@@ -26,6 +28,9 @@ class FlashcardServiceTest {
 
     @Autowired
     private SrsReviewService srsReviewService;
+
+    @Autowired
+    private LearnSessionService learnSessionService;
 
     @Autowired
     private SrsCardStateRepository srsCardStateRepository;
@@ -85,5 +90,21 @@ class FlashcardServiceTest {
             .hasMessage("Flashcard was not found.");
         assertThat(srsCardStateRepository.findByFlashcardId(flashcard.getId())).isEmpty();
         assertThat(srsReviewLogRepository.count()).isZero();
+    }
+
+    @Test
+    void deletesFlashcardReferencedByLearnSession() {
+        var deck = deckService.createDeck(null, "Korean Basics", null);
+        var flashcard = flashcardService.createFlashcard(deck.getId(), "현장", "site", null, null);
+        learnSessionService.createSession(
+            deck.getId(),
+            new CreateLearnSessionRequest(0, true, false, false, false, false, false)
+        );
+
+        flashcardService.deleteFlashcard(flashcard.getId());
+
+        assertThatThrownBy(() -> flashcardService.getFlashcard(flashcard.getId()))
+            .isInstanceOf(org.fpt.studydeck.exception.ResourceNotFoundException.class)
+            .hasMessage("Flashcard was not found.");
     }
 }

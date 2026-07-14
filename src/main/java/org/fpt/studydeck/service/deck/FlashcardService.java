@@ -7,10 +7,16 @@ import org.fpt.studydeck.domain.deck.Flashcard;
 import org.fpt.studydeck.exception.ResourceNotFoundException;
 import org.fpt.studydeck.repository.deck.DeckRepository;
 import org.fpt.studydeck.repository.deck.FlashcardRepository;
+import org.fpt.studydeck.repository.learn.LearnSessionRepository;
+import org.fpt.studydeck.repository.matching.MatchingSessionRepository;
+import org.fpt.studydeck.repository.practice.PracticeTestRepository;
+import org.fpt.studydeck.repository.sorting.SortingSessionRepository;
 import org.fpt.studydeck.repository.srs.SrsCardStateRepository;
 import org.fpt.studydeck.repository.srs.SrsReviewLogRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import jakarta.persistence.EntityManager;
 
 @Service
 @Transactional
@@ -21,19 +27,34 @@ public class FlashcardService {
 
     private final DeckRepository deckRepository;
     private final FlashcardRepository flashcardRepository;
+    private final LearnSessionRepository learnSessionRepository;
+    private final MatchingSessionRepository matchingSessionRepository;
+    private final PracticeTestRepository practiceTestRepository;
+    private final SortingSessionRepository sortingSessionRepository;
     private final SrsCardStateRepository srsCardStateRepository;
     private final SrsReviewLogRepository srsReviewLogRepository;
+    private final EntityManager entityManager;
 
     public FlashcardService(
         DeckRepository deckRepository,
         FlashcardRepository flashcardRepository,
+        LearnSessionRepository learnSessionRepository,
+        MatchingSessionRepository matchingSessionRepository,
+        PracticeTestRepository practiceTestRepository,
+        SortingSessionRepository sortingSessionRepository,
         SrsCardStateRepository srsCardStateRepository,
-        SrsReviewLogRepository srsReviewLogRepository
+        SrsReviewLogRepository srsReviewLogRepository,
+        EntityManager entityManager
     ) {
         this.deckRepository = deckRepository;
         this.flashcardRepository = flashcardRepository;
+        this.learnSessionRepository = learnSessionRepository;
+        this.matchingSessionRepository = matchingSessionRepository;
+        this.practiceTestRepository = practiceTestRepository;
+        this.sortingSessionRepository = sortingSessionRepository;
         this.srsCardStateRepository = srsCardStateRepository;
         this.srsReviewLogRepository = srsReviewLogRepository;
+        this.entityManager = entityManager;
     }
 
     public Flashcard createFlashcard(
@@ -84,9 +105,17 @@ public class FlashcardService {
     }
 
     public void deleteFlashcard(Long id) {
-        Flashcard flashcard = getFlashcard(id);
+        if (!flashcardRepository.existsById(id)) {
+            throw new ResourceNotFoundException(FLASHCARD_NOT_FOUND);
+        }
+        learnSessionRepository.deleteItemsByFlashcardId(id);
+        matchingSessionRepository.deleteItemsByFlashcardId(id);
+        practiceTestRepository.deleteQuestionsByFlashcardId(id);
+        sortingSessionRepository.deleteItemsByFlashcardId(id);
         srsReviewLogRepository.deleteByFlashcardId(id);
         srsCardStateRepository.deleteByFlashcardId(id);
-        flashcardRepository.delete(flashcard);
+        entityManager.flush();
+        entityManager.clear();
+        flashcardRepository.deleteById(id);
     }
 }

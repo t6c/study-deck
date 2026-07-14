@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.fpt.studydeck.domain.srs.SrsCardState;
 import org.fpt.studydeck.domain.srs.SrsState;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -14,9 +15,13 @@ public interface SrsCardStateRepository extends JpaRepository<SrsCardState, Long
 
     Optional<SrsCardState> findByFlashcardId(Long flashcardId);
 
-    void deleteByFlashcardId(Long flashcardId);
+    @Modifying
+    @Query("delete from SrsCardState state where state.flashcard.id = :flashcardId")
+    void deleteByFlashcardId(@Param("flashcardId") Long flashcardId);
 
-    void deleteByFlashcardDeckId(Long deckId);
+    @Modifying
+    @Query("delete from SrsCardState state where state.flashcard.deck.id = :deckId")
+    void deleteByFlashcardDeckId(@Param("deckId") Long deckId);
 
     long countByFlashcardDeckId(Long deckId);
 

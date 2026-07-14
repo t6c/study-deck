@@ -99,12 +99,41 @@ export function LibraryPage() {
     },
   });
 
-  const routeFilter = location.pathname === '/folders' ? 'folders' : location.pathname === '/decks' ? 'decks' : 'all';
+  const routeFilter =
+    location.pathname === '/folders'
+      ? 'folders'
+      : location.pathname === '/decks'
+        ? 'decks'
+        : location.pathname === '/starred'
+          ? 'starred'
+          : 'all';
+  const pageCopy = {
+    all: {
+      title: 'Library',
+      description: 'Organize folders, decks, and study material.',
+      empty: 'Create a folder or deck, or adjust the current filters.',
+    },
+    folders: {
+      title: 'Folders',
+      description: 'Organize decks into study folders.',
+      empty: 'No folders found. Create a folder to group your decks.',
+    },
+    decks: {
+      title: 'Decks',
+      description: 'Browse and manage all study decks.',
+      empty: 'No decks found. Create a deck to start adding cards.',
+    },
+    starred: {
+      title: 'Starred',
+      description: 'Review decks that contain starred cards.',
+      empty: 'No starred deck activity found yet. Star cards inside a deck to build this view.',
+    },
+  }[routeFilter];
   const normalizedSearch = search.trim().toLowerCase();
   const filteredFolders = useMemo(
     () =>
       (folders.data ?? []).filter((folder) => {
-        if (routeFilter === 'decks') {
+        if (routeFilter === 'decks' || routeFilter === 'starred') {
           return false;
         }
 
@@ -116,6 +145,9 @@ export function LibraryPage() {
     () =>
       (decks.data ?? []).filter((deck) => {
         if (routeFilter === 'folders') {
+          return false;
+        }
+        if (routeFilter === 'starred') {
           return false;
         }
 
@@ -149,8 +181,8 @@ export function LibraryPage() {
   return (
     <Stack gap="xl">
       <PageHeader
-        title="Library"
-        description="Organize folders, decks, and study material."
+        title={pageCopy.title}
+        description={pageCopy.description}
         actions={
           <>
             <Button
@@ -207,7 +239,7 @@ export function LibraryPage() {
       {isEmpty ? (
         <EmptyState
           title="No library items found"
-          description="Create a folder or deck, or adjust the current filters."
+          description={pageCopy.empty}
           action={
             <Button onClick={() => setDeckModalOpen(true)} leftSection={<IconPlus size={16} />}>
               New deck

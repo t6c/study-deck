@@ -14,8 +14,10 @@ import { MatchingSessionPage } from '../features/matching/MatchingSessionPage';
 import { PracticeOptionsPage } from '../features/practice/PracticeOptionsPage';
 import { PracticeSessionPage } from '../features/practice/PracticeSessionPage';
 import { PracticeTestsPage } from '../features/practice/PracticeTestsPage';
+import { ProfilePage } from '../features/library/ProfilePage';
 import { RegisterPage } from '../features/auth/RegisterPage';
 import { CardSortingPanel } from '../features/sorting/CardSortingPanel';
+import { SpacedRepetitionDecksPage } from '../features/srs/SpacedRepetitionDecksPage';
 import { SrsDashboardPage } from '../features/srs/SrsDashboardPage';
 import { SrsIntroPage } from '../features/srs/SrsIntroPage';
 import { SrsReviewPage } from '../features/srs/SrsReviewPage';
@@ -32,8 +34,8 @@ export function AppRoutes() {
           <Route path="folders" element={<LibraryPage />} />
           <Route path="decks" element={<LibraryPage />} />
           <Route path="starred" element={<LibraryPage />} />
-          <Route path="srs" element={<LibraryPage />} />
-          <Route path="profile" element={<LibraryPage />} />
+          <Route path="srs" element={<SpacedRepetitionDecksPage />} />
+          <Route path="profile" element={<ProfilePage />} />
           <Route path="decks/:deckId" element={<DeckDetailPage />} />
           <Route path="decks/:deckId/flashcards/edit" element={<FlashcardEditorPage />} />
           <Route path="decks/:deckId/flashcards/viewer" element={<FlashcardViewerPage />} />
